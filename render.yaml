@@ -5,7 +5,6 @@ services:
     env: postgresql
     plan: free
     region: oregon
-    ipAllowList: []
 
   # PHP web aplikacija
   - type: web
@@ -16,20 +15,7 @@ services:
     buildCommand: |
       chmod +x render-build.sh
       ./render-build.sh
-    startCommand: |
-      # Počakamo, da je baza pripravljena
-      while ! pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER; do
-        echo "Waiting for database..."
-        sleep 2
-      done
-      
-      # Uvoz podatkov, če je potrebno
-      if [ -f /var/www/html/import_data_docker.py ]; then
-        cd /var/www/html && python3 import_data_docker.py
-      fi
-      
-      # Zagon Apache
-      apache2-foreground
+
     envVars:
       - key: DB_HOST
         fromService:
@@ -37,10 +23,7 @@ services:
           name: profesorji-db
           property: host
       - key: DB_NAME
-        fromService:
-          type: pserv
-          name: profesorji-db
-          property: database
+        value: profesorji_db
       - key: DB_USER
         fromService:
           type: pserv
