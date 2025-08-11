@@ -1,5 +1,5 @@
 services:
-  # PostgreSQL baza podatkov
+  # PostgreSQL baza podatkov - Render.com deployment
   - type: pserv
     name: profesorji-db
     env: postgresql
