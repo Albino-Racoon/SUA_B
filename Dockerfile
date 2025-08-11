@@ -34,6 +34,7 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
 
 # Kopiranje aplikacije
 COPY src/ /var/www/html/
+COPY init.sql /var/www/html/
 COPY profesorji_komentarji_incremental.backup.csv /var/www/html/
 COPY import_data_docker.py /var/www/html/
 COPY docker-entrypoint.sh /usr/local/bin/

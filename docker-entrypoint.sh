@@ -10,6 +10,12 @@ done
 
 echo "PostgreSQL je pripravljen!"
 
+# Ustvari tabele iz init.sql
+if [ -f /var/www/html/init.sql ]; then
+    echo "Ustvarjam tabele iz init.sql..."
+    psql -h $DB_HOST -U $DB_USER -d $DB_NAME -p $DB_PORT -f /var/www/html/init.sql
+fi
+
 # Uvozi podatke, če je potrebno
 if [ -f /var/www/html/import_data_docker.py ]; then
     echo "Uvažam podatke iz CSV datoteke..."
