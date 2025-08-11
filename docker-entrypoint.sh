@@ -1,9 +1,10 @@
 #!/bin/bash
 set -e
 
-# Počakaj, da je PostgreSQL pripravljen
+# Počakaj, da je PostgreSQL pripravljen (uporabi environment variables)
 echo "Čakam, da se PostgreSQL požene..."
-while ! pg_isready -h db -U postgres -d profesorji_db; do
+while ! pg_isready -h $DB_HOST -U $DB_USER -d $DB_NAME -p $DB_PORT; do
+    echo "Čakam na bazo podatkov..."
     sleep 2
 done
 
