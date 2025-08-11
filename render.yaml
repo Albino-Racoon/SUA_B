@@ -5,6 +5,7 @@ services:
     env: postgresql
     plan: free
     region: oregon
+    startCommand: postgres
 
   # PHP web aplikacija
   - type: web
@@ -25,15 +26,9 @@ services:
       - key: DB_NAME
         value: profesorji_db
       - key: DB_USER
-        fromService:
-          type: pserv
-          name: profesorji-db
-          property: user
+        value: postgres
       - key: DB_PASS
-        fromService:
-          type: pserv
-          name: profesorji-db
-          property: password
+        value: postgres
       - key: DB_PORT
         fromService:
           type: pserv
