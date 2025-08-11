@@ -3,7 +3,6 @@ databases:
     plan: free
     region: oregon
     databaseName: profesorji_db
-    user: postgres
     ipAllowList: []
 
 services:
