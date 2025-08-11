@@ -45,6 +45,8 @@ services:
         value: "512M"
       - key: PHP_MAX_EXECUTION_TIME
         value: "300"
+      - key: PORT
+        value: "10000"
     healthCheckPath: /
     autoDeploy: true
     buildFilter:

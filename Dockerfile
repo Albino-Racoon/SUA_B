@@ -29,7 +29,8 @@ RUN echo "memory_limit = 512M" > /usr/local/etc/php/conf.d/memory-limit.ini \
 
 # Nastavitev Apache
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && echo "DocumentRoot /var/www/html" >> /etc/apache2/apache2.conf
+    && echo "DocumentRoot /var/www/html" >> /etc/apache2/apache2.conf \
+    && echo "Listen \${PORT}" >> /etc/apache2/ports.conf
 
 # Kopiranje aplikacije
 COPY src/ /var/www/html/
@@ -45,7 +46,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Expose port
-EXPOSE 80
+EXPOSE $PORT
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
