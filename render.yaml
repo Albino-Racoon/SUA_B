@@ -1,11 +1,9 @@
 services:
   # PostgreSQL database service
-  - type: pserv
+  - type: postgresql
     name: profesorji-db
-    env: postgresql
     plan: free
     region: oregon
-    startCommand: postgres
 
   # PHP web application
   - type: web
@@ -19,7 +17,7 @@ services:
     envVars:
       - key: DB_HOST
         fromService:
-          type: pserv
+          type: postgresql
           name: profesorji-db
           property: host
       - key: DB_NAME
@@ -30,7 +28,7 @@ services:
         value: postgres
       - key: DB_PORT
         fromService:
-          type: pserv
+          type: postgresql
           name: profesorji-db
           property: port
       - key: PHP_MEMORY_LIMIT
