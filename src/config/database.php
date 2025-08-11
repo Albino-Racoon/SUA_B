@@ -4,11 +4,19 @@
  */
 
 class Database {
-    private $host = "db";
-    private $db_name = "profesorji_db";
-    private $username = "postgres";
-    private $password = "postgres";
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
     private $conn;
+    
+    public function __construct() {
+        // Uporabi environment variables ali fallback na default vrednosti
+        $this->host = $_ENV['DB_HOST'] ?? 'localhost';
+        $this->db_name = $_ENV['DB_NAME'] ?? 'profesorji_db';
+        $this->username = $_ENV['DB_USER'] ?? 'postgres';
+        $this->password = $_ENV['DB_PASS'] ?? 'postgres';
+    }
     
     public function getConnection() {
         $this->conn = null;
