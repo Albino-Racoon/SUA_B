@@ -1,0 +1,78 @@
+services:
+  # PostgreSQL baza podatkov
+  - type: pserv
+    name: profesorji-db
+    env: postgresql
+    plan: free
+    region: oregon
+    ipAllowList: []
+    maxConnections: 5
+    maintenanceWindow: sunday:00:00
+    pgVersion: "15"
+    pgBouncerEnabled: false
+
+  # PHP web aplikacija
+  - type: web
+    name: profesorji-web
+    env: docker
+    region: oregon
+    plan: free
+    buildCommand: |
+      chmod +x render-build.sh
+      ./render-build.sh
+    startCommand: |
+      # Počakamo, da je baza pripravljena
+      while ! pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER; do
+        echo "Waiting for database..."
+        sleep 2
+      done
+      
+      # Uvoz podatkov, če je potrebno
+      if [ -f /var/www/html/import_data_docker.py ]; then
+        cd /var/www/html && python3 import_data_docker.py
+      fi
+      
+      # Zagon Apache
+      apache2-foreground
+    envVars:
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: profesorji-db
+          property: host
+      - key: DB_NAME
+        fromService:
+          type: pserv
+          name: profesorji-db
+          property: database
+      - key: DB_USER
+        fromService:
+          type: pserv
+          name: profesorji-db
+          property: user
+      - key: DB_PASS
+        fromService:
+          type: pserv
+          name: profesorji-db
+          property: password
+      - key: DB_PORT
+        fromService:
+          type: pserv
+          name: profesorji-db
+          property: port
+      - key: PHP_MEMORY_LIMIT
+        value: "512M"
+      - key: PHP_MAX_EXECUTION_TIME
+        value: "300"
+    healthCheckPath: /
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - src/**
+        - Dockerfile
+        - docker-entrypoint.sh
+        - init.sql
+        - import_data_docker.py
+        - profesorji_komentarji_incremental.backup.csv
+        - requirements.txt
+        - render-build.sh

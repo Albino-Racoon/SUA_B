@@ -18,7 +18,18 @@ RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Namestitev Python odvisnosti v virtualnem okolju
-RUN pip3 install --no-cache-dir psycopg2-binary
+COPY requirements.txt /tmp/
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+
+# Nastavitev PHP konfiguracije
+RUN echo "memory_limit = 512M" > /usr/local/etc/php/conf.d/memory-limit.ini \
+    && echo "max_execution_time = 300" > /usr/local/etc/php/conf.d/execution-time.ini \
+    && echo "post_max_size = 100M" > /usr/local/etc/php/conf.d/upload-limits.ini \
+    && echo "upload_max_filesize = 100M" >> /usr/local/etc/php/conf.d/upload-limits.ini
+
+# Nastavitev Apache
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+    && echo "DocumentRoot /var/www/html" >> /etc/apache2/apache2.conf
 
 # Kopiranje aplikacije
 COPY src/ /var/www/html/
@@ -33,15 +44,12 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod +x /var/www/html/import_data_docker.py \
     && chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Nastavitev PHP konfiguracije
-RUN echo "memory_limit = 512M" > /usr/local/etc/php/conf.d/memory-limit.ini \
-    && echo "max_execution_time = 300" > /usr/local/etc/php/conf.d/execution-time.ini
-
-# Nastavitev Apache
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
 # Expose port
 EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
 
 # Entrypoint
 ENTRYPOINT ["docker-entrypoint.sh"]
