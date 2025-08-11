@@ -1,5 +1,5 @@
 services:
-  # PostgreSQL baza podatkov - Render.com deployment
+  # PostgreSQL database service
   - type: pserv
     name: profesorji-db
     env: postgresql
@@ -7,7 +7,7 @@ services:
     region: oregon
     startCommand: postgres
 
-  # PHP web aplikacija
+  # PHP web application
   - type: web
     name: profesorji-web
     env: docker
@@ -16,7 +16,6 @@ services:
     buildCommand: |
       chmod +x render-build.sh
       ./render-build.sh
-
     envVars:
       - key: DB_HOST
         fromService:
