@@ -6,10 +6,6 @@ services:
     plan: free
     region: oregon
     ipAllowList: []
-    maxConnections: 5
-    maintenanceWindow: sunday:00:00
-    pgVersion: "15"
-    pgBouncerEnabled: false
 
   # PHP web aplikacija
   - type: web
