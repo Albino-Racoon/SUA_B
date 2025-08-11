@@ -13,6 +13,7 @@ apt-get update && apt-get install -y \
     python3-venv \
     postgresql-client \
     curl \
+    wget
     && docker-php-ext-install pdo pdo_pgsql \
     && a2enmod rewrite \
     && apt-get clean \
