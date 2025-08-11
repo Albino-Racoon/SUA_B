@@ -1,13 +1,12 @@
-services:
-  # PostgreSQL database
-  - type: pserv
-    name: profesorji-db
-    env: postgresql
+databases:
+  - name: profesorji-db
     plan: free
     region: oregon
-    startCommand: postgres
+    databaseName: profesorji_db
+    user: postgres
+    ipAllowList: []
 
-  # PHP web app
+services:
   - type: web
     name: profesorji-web
     env: docker
@@ -17,20 +16,30 @@ services:
       chmod +x render-build.sh
       ./render-build.sh
     envVars:
+      # Enotna povezava (priporočeno v appu):
+      - key: DATABASE_URL
+        fromDatabase:
+          name: profesorji-db
+          property: connectionString
+      # Ločene vrednosti za PHP:
       - key: DB_HOST
-        fromService:
-          type: pserv
+        fromDatabase:
           name: profesorji-db
           property: host
       - key: DB_NAME
-        value: profesorji_db
+        fromDatabase:
+          name: profesorji-db
+          property: database
       - key: DB_USER
-        value: postgres
+        fromDatabase:
+          name: profesorji-db
+          property: user
       - key: DB_PASS
-        value: postgres
+        fromDatabase:
+          name: profesorji-db
+          property: password
       - key: DB_PORT
-        fromService:
-          type: pserv
+        fromDatabase:
           name: profesorji-db
           property: port
       - key: PHP_MEMORY_LIMIT
