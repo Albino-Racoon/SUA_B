@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:15
+    container_name: profesorji_db
+    environment:
+      POSTGRES_DB: profesorji_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build: .
+    container_name: profesorji_web
+    volumes:
+      - ./src:/var/www/html
+      - ./profesorji_komentarji_incremental.backup.csv:/var/www/html/profesorji_komentarji_incremental.backup.csv
+      - ./import_data_docker.py:/var/www/html/import_data_docker.py
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_NAME: profesorji_db
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_PORT: 5432
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local

@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+# Počakaj, da je PostgreSQL pripravljen
+echo "Čakam, da se PostgreSQL požene..."
+while ! pg_isready -h db -U postgres -d profesorji_db; do
+    sleep 2
+done
+
+echo "PostgreSQL je pripravljen!"
+
+# Uvozi podatke, če je potrebno
+if [ -f /var/www/html/import_data_docker.py ]; then
+    echo "Uvažam podatke iz CSV datoteke..."
+    cd /var/www/html
+    python3 import_data_docker.py
+fi
+
+# Zaženi Apache
+echo "Začenjam Apache..."
+exec apache2-foreground
