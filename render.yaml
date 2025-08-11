@@ -1,12 +1,13 @@
 services:
-  # PostgreSQL database service
+  # PostgreSQL database
   - type: pserv
     name: profesorji-db
     env: postgresql
     plan: free
     region: oregon
+    startCommand: postgres
 
-  # PHP web application
+  # PHP web app
   - type: web
     name: profesorji-web
     env: docker
