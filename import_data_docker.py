@@ -12,7 +12,7 @@ import time
 # Konfiguracija baze iz okoljskih spremenljivk
 DB_CONFIG = {
     'host': os.getenv('DB_HOST', 'db'),
-    'database': os.getenv('DB_NAME', 'profesorji_db'),
+    'dbname': os.getenv('DB_NAME', 'profesorji_db'),
     'user': os.getenv('DB_USER', 'postgres'),
     'password': os.getenv('DB_PASS', 'postgres'),
     'port': '5432'
