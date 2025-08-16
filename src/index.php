@@ -246,8 +246,31 @@ $statistika = $kviz->getStatistics();
                 </div>
             <?php endforeach; ?>
         </div>
+        
+        <!-- Serverless Storitve Link -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4 class="mb-3">
+                            <i class="fas fa-cloud me-2"></i>
+                            🔄 Serverless Storitve
+                        </h4>
+                        <p class="text-muted mb-3">
+                            Posebna stran za oblačno računalništvo - upravljanje profesorjev in komentarjev
+                        </p>
+                        <a href="serverless_services.php" class="btn btn-primary btn-lg">
+                            <i class="fas fa-external-link-alt me-2"></i>
+                            Odpri Serverless Storitve
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+
 </body>
 </html>
