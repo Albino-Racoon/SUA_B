@@ -4,7 +4,7 @@ Skripta za uvoz podatkov v Docker okolju
 """
 
 import csv
-import psycopg2
+import psycopg
 import re
 import os
 import time
@@ -25,11 +25,11 @@ def wait_for_db():
     
     while attempt < max_attempts:
         try:
-            conn = psycopg2.connect(**DB_CONFIG)
+            conn = psycopg.connect(**DB_CONFIG)
             conn.close()
             print("✅ Baza je pripravljena!")
             return True
-        except psycopg2.OperationalError:
+        except psycopg.OperationalError:
             attempt += 1
             print(f"⏳ Čakam na bazo... (poskus {attempt}/{max_attempts})")
             time.sleep(2)
@@ -63,7 +63,7 @@ def import_data():
     
     try:
         # Poveži se z bazo
-        conn = psycopg2.connect(**DB_CONFIG)
+        conn = psycopg.connect(**DB_CONFIG)
         cursor = conn.cursor()
         
         print("✅ Povezava z bazo uspešna!")
